@@ -1,5 +1,6 @@
 package com.denert.app.rest.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,10 +12,12 @@ public class Agreement {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonBackReference(value = "user-agreements")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "projectId")
+    @JsonBackReference(value = "project-agreements")
     private Project project;
 
     public Long getAgreementId() {

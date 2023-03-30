@@ -1,5 +1,6 @@
 package com.denert.app.rest.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.Length;
 
@@ -13,7 +14,9 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;
 
-//    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "address")
+    @JsonManagedReference
+    private Set<User> users = new HashSet<>();
 
     @Column(length = 45)
     private String city;
@@ -38,13 +41,13 @@ public class Address {
         this.addressId = addressId;
     }
 
-//    public Set<User> getUsers() {
-//        return users;
-//    }
-//
-//    public void setUsers(Set<User> users) {
-//        this.users = users;
-//    }
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
     public String getCity() {
         return city;

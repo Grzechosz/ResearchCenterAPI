@@ -1,6 +1,8 @@
 package com.denert.app.rest.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,15 +35,22 @@ public class User {
     private int permissions;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value = "user-agreements")
     private Set<Agreement> projectsAgreements;
 
     @OneToMany(mappedBy = "user")
-    private Set<Agreement> projectsCommission;
+    @JsonManagedReference(value = "user-commissions")
+    private Set<TestCommission> projectsCommission;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "addressId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "addressId", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "addressId")
+    @JsonBackReference
     private Address address;
 
     public long getUserId() {
@@ -108,11 +117,11 @@ public class User {
         this.projectsAgreements = projectsAgreements;
     }
 
-    public Set<Agreement> getProjectsCommission() {
+    public Set<TestCommission> getProjectsCommission() {
         return projectsCommission;
     }
 
-    public void setProjectsCommission(Set<Agreement> projectsCommission) {
+    public void setProjectsCommission(Set<TestCommission> projectsCommission) {
         this.projectsCommission = projectsCommission;
     }
 

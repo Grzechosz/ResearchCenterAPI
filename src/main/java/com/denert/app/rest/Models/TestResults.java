@@ -1,5 +1,6 @@
 package com.denert.app.rest.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,11 +10,12 @@ public class TestResults {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long resultsId;
 
-    @Column(length = 255)
+    @Column
     private String resultsDesc;
 
     @OneToOne(mappedBy = "testResult", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+    @JsonManagedReference(value = "test-result")
     private TestCommission testCommission;
 
     public long getResultsId() {
@@ -30,5 +32,13 @@ public class TestResults {
 
     public void setResultsDesc(String resultsDesc) {
         this.resultsDesc = resultsDesc;
+    }
+
+    public TestCommission getTestCommission() {
+        return testCommission;
+    }
+
+    public void setTestCommission(TestCommission testCommission) {
+        this.testCommission = testCommission;
     }
 }

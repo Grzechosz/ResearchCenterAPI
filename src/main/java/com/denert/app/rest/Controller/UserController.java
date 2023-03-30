@@ -1,8 +1,11 @@
 package com.denert.app.rest.Controller;
 
+import com.denert.app.rest.Models.Project;
+import com.denert.app.rest.Models.TestResults;
 import com.denert.app.rest.Models.User;
 import com.denert.app.rest.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,23 +16,28 @@ public class UserController {
     @Autowired
     private UserRepo userRepo;
 
-    @GetMapping(value = "/")
+/*    @GetMapping(value = "/")
     public String getPage() {
         return "Welcome";
-    }
+    }*/
     @GetMapping(value = "/users")
     public List<User> getUsers() {
         return userRepo.findAll();
     }
 
+    @GetMapping(value = "/users/{id}")
+    public User getUser(@PathVariable long id) {
+        return userRepo.findById(id).get();
+    }
+
     @PostMapping(value = "/save")
-    public String saveUser(@RequestBody User user) {
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
         userRepo.save(user);
-        return "Saved...";
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping(value = "update/{id}")
-    public String updateUser(@PathVariable long id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
         User updatedUser = userRepo.findById(id).get();
         updatedUser.setName(user.getName());
         updatedUser.setSurname(user.getSurname());
@@ -39,7 +47,7 @@ public class UserController {
         updatedUser.setPhoneNumber(user.getPhoneNumber());
         updatedUser.setAddress(user.getAddress());
         userRepo.save(updatedUser);
-        return "Updated...";
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping(value = "/delete/{id}")
