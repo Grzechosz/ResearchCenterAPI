@@ -9,5 +9,5 @@ go to src/main/resources/application.properties and replace words between **
 
 build project
 
-to test api with postman use link from the mail
+
 
