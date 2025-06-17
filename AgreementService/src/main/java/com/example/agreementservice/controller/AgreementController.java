@@ -1,8 +1,7 @@
 package com.example.agreementservice.controller;
 
+import com.example.agreementservice.dto.AgreementResponse;
 import com.example.agreementservice.service.AgreementService;
-import com.example.shared.dto.AgreementRequest;
-import com.example.shared.dto.AgreementResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,15 +25,20 @@ public class AgreementController {
         return agreementService.getAgreementById(id);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AgreementResponse>> getAgreementsByUserId(@PathVariable long userId) {
+        return ResponseEntity.ok(agreementService.getAgreementsByUserId(userId));
+    }
+
     @PostMapping
-    public ResponseEntity<AgreementResponse> saveAgreement(@RequestBody AgreementRequest agreementRequest) {
-        AgreementResponse savedAgreement = agreementService.createAgreement(agreementRequest);
+    public ResponseEntity<AgreementResponse> saveAgreement(@RequestBody AgreementResponse agreementRequest) {
+        AgreementResponse savedAgreement = agreementService.createAgreement();
         return ResponseEntity.ok(savedAgreement);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<AgreementResponse> updateAgreement(@PathVariable long id, @RequestBody AgreementRequest agreementRequest) {
-        AgreementResponse updatedAgreement = agreementService.updateAgreement(agreementRequest, id);
+    public ResponseEntity<AgreementResponse> updateAgreement(@PathVariable long id, @RequestBody AgreementResponse agreementRequest) {
+        AgreementResponse updatedAgreement = agreementService.updateAgreement(id);
         return ResponseEntity.ok(updatedAgreement);
     }
 

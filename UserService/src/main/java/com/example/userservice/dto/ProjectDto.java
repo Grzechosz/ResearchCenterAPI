@@ -1,20 +1,17 @@
-package com.example.agreementservice.dto;
-
+package com.example.userservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgreementRequest {
-
-    private Long agreementId;
-
-    private Long userId;
-
-    private Long projectId;
+public class ProjectDto {
+    private String name;
+    private String description;
 }

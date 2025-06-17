@@ -1,19 +1,20 @@
 package com.example.userservice.dto;
 
-import com.example.adressservice.models.Address;
-import com.example.agreementservice.models.Agreement;
-import com.example.projectservice.models.TestCommission;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+public class UserRequest{
+    private long userId;
+
     private String name;
 
     private String surname;
@@ -24,11 +25,7 @@ public class UserRequest {
 
     private String mail;
 
-    private int permissions;
+    private Set<Long> projectsAgreementsId;
 
-    private Set<Agreement> projectsAgreements;
-
-    private Set<TestCommission> projectsCommission;
-
-    private Address address;
+    private Long addressId;
 }

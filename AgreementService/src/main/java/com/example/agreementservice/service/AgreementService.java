@@ -1,10 +1,9 @@
 package com.example.agreementservice.service;
 
+import com.example.agreementservice.dto.AgreementResponse;
 import com.example.agreementservice.exception.AgreementNotFoundException;
+import com.example.agreementservice.models.Agreement;
 import com.example.agreementservice.repo.AgreementRepo;
-import com.example.shared.dto.AgreementRequest;
-import com.example.shared.dto.AgreementResponse;
-import com.example.shared.models.Agreement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,10 +16,8 @@ import java.util.List;
 public class AgreementService {
     private final AgreementRepo agreementRepo;
 
-    public AgreementResponse createAgreement(AgreementRequest agreementRequest){
+    public AgreementResponse createAgreement(){
         final Agreement agreement = Agreement.builder()
-                .user(agreementRequest.getUser())
-                .project(agreementRequest.getProject())
                 .build();
         AgreementResponse agreementResponse = mapToAgreementResponse(agreementRepo.save(agreement));
         log.info("Agreement {} is saved", agreement.getAgreementId());
@@ -31,7 +28,7 @@ public class AgreementService {
     public List<AgreementResponse> getAllAgreements(){
         List<Agreement> agreements = agreementRepo.findAll();
 
-        return agreements.stream().map(agreement -> mapToAgreementResponse(agreement)).toList();
+        return agreements.stream().map(this::mapToAgreementResponse).toList();
     }
 
     public AgreementResponse getAgreementById(long id){
@@ -40,11 +37,20 @@ public class AgreementService {
                 .orElseThrow(() -> new AgreementNotFoundException("Agreement with ID " + id + " not found."));
     }
 
-    public AgreementResponse updateAgreement(AgreementRequest agreementRequest, long id) {
+    public List<AgreementResponse> getAgreementsByUserId(long userId) {
+        List<Agreement> agreements = agreementRepo.findAllByUserId(userId);
+
+        if (agreements.isEmpty()) {
+            throw new AgreementNotFoundException("No agreements found for user ID " + userId);
+        }
+
+        return agreements.stream().map(this::mapToAgreementResponse).toList();
+    }
+
+
+    public AgreementResponse updateAgreement(long id) {
         return agreementRepo.findById(id)
                 .map(existingAgreement -> {
-                    existingAgreement.setProject(agreementRequest.getProject());
-                    existingAgreement.setUser(agreementRequest.getUser());
 
                     Agreement updatedAgreement = agreementRepo.save(existingAgreement);
                     log.info("Agreement {} was updated", updatedAgreement.getAgreementId());
@@ -64,8 +70,6 @@ public class AgreementService {
     private AgreementResponse mapToAgreementResponse(Agreement agreement) {
         return AgreementResponse.builder()
                 .agreementId(agreement.getAgreementId())
-                .user(agreement.getUser())
-                .project(agreement.getProject())
                 .build();
     }
 

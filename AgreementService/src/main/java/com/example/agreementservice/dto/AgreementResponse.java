@@ -13,7 +13,7 @@ public class AgreementResponse {
 
     private Long agreementId;
 
-    private User user;
+    private Long userId;
 
-    private Project project;
+    private ProjectDto project;
 }

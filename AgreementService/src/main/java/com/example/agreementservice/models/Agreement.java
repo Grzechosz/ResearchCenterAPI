@@ -1,7 +1,10 @@
 package com.example.agreementservice.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,15 +21,5 @@ public class Agreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long agreementId;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    @JsonBackReference(value = "user-agreements")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "projectId")
-    @JsonBackReference(value = "project-agreements")
-    private Project project;
-
-
+    private Long userId;
 }

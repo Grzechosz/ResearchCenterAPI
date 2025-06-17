@@ -1,6 +1,5 @@
 package com.example.projectservice.models;
 
-import com.example.agreementservice.models.Agreement;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,11 +26,4 @@ public class Project {
     @Column(length = 250)
     private String description;
 
-    @OneToMany(mappedBy = "project")
-    @JsonManagedReference(value = "project-agreements")
-    private Set<Agreement> usersAgreements;
-
-    @OneToMany(mappedBy = "project")
-    @JsonManagedReference(value = "project-commissions")
-    private Set<TestCommission> usersCommission;
 }

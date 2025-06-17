@@ -1,7 +1,6 @@
 package com.example.projectservice.controller;
 
-import com.example.projectservice.dto.ProjectRequest;
-import com.example.projectservice.dto.ProjectResponse;
+import com.example.projectservice.dto.ProjectDto;
 import com.example.projectservice.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,24 +16,24 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public List<ProjectResponse> getProjects() {
+    public List<ProjectDto> getProjects() {
         return projectService.getAllProjects();
     }
 
     @GetMapping(value = "/{id}")
-    public ProjectResponse getProject(@PathVariable long id) {
+    public ProjectDto getProject(@PathVariable long id) {
         return projectService.getProjectById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ProjectResponse> saveProject(@RequestBody ProjectRequest projectRequest) {
-        ProjectResponse savedProject = projectService.createProject(projectRequest);
+    public ResponseEntity<ProjectDto> saveProject(@RequestBody ProjectDto projectRequest) {
+        ProjectDto savedProject = projectService.createProject(projectRequest);
         return ResponseEntity.ok(savedProject);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProjectResponse> updateProject(@PathVariable long id, @RequestBody ProjectRequest projectRequest) {
-        ProjectResponse updatedProject = projectService.updateProject(projectRequest, id);
+    public ResponseEntity<ProjectDto> updateProject(@PathVariable long id, @RequestBody ProjectDto projectRequest) {
+        ProjectDto updatedProject = projectService.updateProject(projectRequest, id);
         return ResponseEntity.ok(updatedProject);
     }
 

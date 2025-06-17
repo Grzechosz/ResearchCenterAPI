@@ -1,18 +1,14 @@
-package com.example.userservice.dto;
+package com.example.address_service.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Set;
-
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
+@AllArgsConstructor
+public class UserDto {
+
     private long userId;
 
     private String name;
@@ -25,7 +21,5 @@ public class UserResponse {
 
     private String mail;
 
-    private List<AgreementDto> projectsAgreements;
-
-    private AddressDto address;
+    private int permissions;
 }
