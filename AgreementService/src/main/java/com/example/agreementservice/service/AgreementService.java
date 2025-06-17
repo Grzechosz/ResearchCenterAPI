@@ -1,76 +1,123 @@
 package com.example.agreementservice.service;
 
+import com.example.agreementservice.client.ProjectClient;
+import com.example.agreementservice.client.UserClient;
+import com.example.agreementservice.dto.AgreementDto;
 import com.example.agreementservice.dto.AgreementResponse;
+import com.example.agreementservice.dto.ProjectDto;
+import com.example.agreementservice.dto.UserDto;
 import com.example.agreementservice.exception.AgreementNotFoundException;
 import com.example.agreementservice.models.Agreement;
 import com.example.agreementservice.repo.AgreementRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AgreementService {
+
     private final AgreementRepo agreementRepo;
+    private final ProjectClient projectClient;
+    private final UserClient userClient;
 
-    public AgreementResponse createAgreement(){
-        final Agreement agreement = Agreement.builder()
+    public AgreementDto createAgreement(AgreementDto agreementRequest) {
+        Agreement agreement = Agreement.builder()
+                .userId(agreementRequest.getUserId())
+                .projectId(agreementRequest.getProjectId())
                 .build();
-        AgreementResponse agreementResponse = mapToAgreementResponse(agreementRepo.save(agreement));
-        log.info("Agreement {} is saved", agreement.getAgreementId());
 
-        return agreementResponse;
+        Agreement saved = agreementRepo.save(agreement);
+        log.info("Agreement {} saved for user {}", saved.getAgreementId(), saved.getUserId());
+        try {
+            projectClient.addAgreementIdToProject(saved.getProjectId(), saved.getAgreementId());
+        } catch (Exception e) {
+            log.warn("Could not update project {} with agreement {}: {}", saved.getProjectId(), saved.getAgreementId(), e.getMessage());
+        }
+        return mapToDto(saved);
     }
 
-    public List<AgreementResponse> getAllAgreements(){
+    @Transactional(readOnly = true)
+    public List<AgreementResponse> getAllAgreements() {
         List<Agreement> agreements = agreementRepo.findAll();
+        List<AgreementResponse> responses = new ArrayList<>();
 
-        return agreements.stream().map(this::mapToAgreementResponse).toList();
-    }
-
-    public AgreementResponse getAgreementById(long id){
-        return agreementRepo.findById(id)
-                .map(this::mapToAgreementResponse)
-                .orElseThrow(() -> new AgreementNotFoundException("Agreement with ID " + id + " not found."));
-    }
-
-    public List<AgreementResponse> getAgreementsByUserId(long userId) {
-        List<Agreement> agreements = agreementRepo.findAllByUserId(userId);
-
-        if (agreements.isEmpty()) {
-            throw new AgreementNotFoundException("No agreements found for user ID " + userId);
+        for (Agreement agreement : agreements) {
+            responses.add(mapToAgreementResponse(agreement));
         }
 
-        return agreements.stream().map(this::mapToAgreementResponse).toList();
+        return responses;
     }
 
-
-    public AgreementResponse updateAgreement(long id) {
-        return agreementRepo.findById(id)
-                .map(existingAgreement -> {
-
-                    Agreement updatedAgreement = agreementRepo.save(existingAgreement);
-                    log.info("Agreement {} was updated", updatedAgreement.getAgreementId());
-                    return mapToAgreementResponse(updatedAgreement);
-
-                })  .orElseThrow(() -> new AgreementNotFoundException("Agreement with ID " + id + " not found"));
+    @Transactional(readOnly = true)
+    public AgreementDto getAgreementById(Long id) {
+        Agreement agreement = agreementRepo.findById(id)
+                .orElseThrow(() -> new AgreementNotFoundException("Agreement with ID " + id + " not found"));
+        return mapToDto(agreement);
     }
 
-    public void deleteAgreement(long id){
-        Agreement agreementToDelete = agreementRepo.findById(id)
-                .orElseThrow(() -> new AgreementNotFoundException("Agreement with ID " + id + " not found."));
+    @Transactional(readOnly = true)
+    public List<AgreementDto> getAgreementsByUserId(Long userId) {
+        List<Agreement> agreements = agreementRepo.findAllByUserId(userId);
+        List<AgreementDto> responses = new ArrayList<>();
 
-        agreementRepo.delete(agreementToDelete);
-        log.info("Agreement {} was deleted", id);
+        for (Agreement agreement : agreements) {
+            responses.add(mapToDto(agreement));
+        }
+        return responses;
+    }
+
+    public void deleteAgreement(Long id) {
+        Agreement agreement = agreementRepo.findById(id)
+                .orElseThrow(() -> new AgreementNotFoundException("Agreement with ID " + id + " not found"));
+        agreementRepo.delete(agreement);
+        log.info("Agreement {} deleted", id);
+    }
+
+    private AgreementDto mapToDto(Agreement agreement) {
+        ProjectDto project = null;
+
+        try {
+            project = projectClient.getProjectsById(agreement.getProjectId());
+        } catch (Exception e) {
+            log.warn("Could not fetch project with id {}: {}", agreement.getProjectId(), e.getMessage());
+        }
+
+        return AgreementDto.builder()
+                .agreementId(agreement.getAgreementId())
+                .userId(agreement.getUserId())
+                .projectId(agreement.getProjectId())
+                .project(project)
+                .build();
     }
 
     private AgreementResponse mapToAgreementResponse(Agreement agreement) {
+        ProjectDto project = null;
+        UserDto user = null;
+
+        try {
+            project = projectClient.getProjectsById(agreement.getProjectId());
+        } catch (Exception e) {
+            log.warn("Could not fetch project with id {}: {}", agreement.getProjectId(), e.getMessage());
+        }
+
+        try {
+            user = userClient.getUserById(agreement.getUserId());
+        } catch (Exception e) {
+            log.warn("Could not fetch user with id {}: {}", agreement.getUserId(), e.getMessage());
+        }
+
         return AgreementResponse.builder()
-                .agreementId(agreement.getAgreementId())
+                .agreement(mapToDto(agreement))
+                .project(project)
+                .user(user)
                 .build();
     }
-
 }

@@ -19,17 +19,21 @@ public class AddressService {
 
     public AddressDto createAddress(AddressDto addressRequest){
         final Address address = Address.builder()
+                .userId(addressRequest.getUserId())
                 .city(addressRequest.getCity())
                 .streetName(addressRequest.getStreetName())
                 .houseNumber(addressRequest.getHouseNumber())
                 .postcode(addressRequest.getPostcode())
                 .flatNumber(addressRequest.getFlatNumber())
                 .build();
-        AddressDto addressResponse = mapToAddressResponse(addressRepo.save(address));
-        log.info("Address {} is saved", address.getAddressId());
 
+        Address saved = addressRepo.save(address);
+        AddressDto addressResponse = mapToAddressResponse(saved);
+
+        log.info("Address {} is saved for user {}", saved.getAddressId(), saved.getUserId());
         return addressResponse;
     }
+
 
     public List<AddressDto> getAllAddresses(){
         List<Address> addresses = addressRepo.findAll();
@@ -80,7 +84,9 @@ public class AddressService {
                 .houseNumber(address.getHouseNumber())
                 .postcode(address.getPostcode())
                 .flatNumber(address.getFlatNumber())
+                .userId(address.getUserId())
                 .build();
     }
+
 
 }

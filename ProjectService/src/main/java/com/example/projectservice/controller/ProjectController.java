@@ -1,6 +1,7 @@
 package com.example.projectservice.controller;
 
-import com.example.projectservice.dto.ProjectDto;
+import com.example.projectservice.dto.ProjectRequest;
+import com.example.projectservice.dto.ProjectResponse;
 import com.example.projectservice.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +17,37 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public List<ProjectDto> getProjects() {
+    public List<ProjectResponse> getAllProjects() {
         return projectService.getAllProjects();
     }
 
-    @GetMapping(value = "/{id}")
-    public ProjectDto getProject(@PathVariable long id) {
+    @PutMapping("/{projectId}/add-agreement/{agreementId}")
+    public ResponseEntity<Void> addAgreementToProject(
+            @PathVariable Long projectId,
+            @PathVariable Long agreementId
+    ) {
+        projectService.addAgreementId(projectId, agreementId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ProjectRequest getProject(@PathVariable long id) {
         return projectService.getProjectById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ProjectDto> saveProject(@RequestBody ProjectDto projectRequest) {
-        ProjectDto savedProject = projectService.createProject(projectRequest);
+    public ResponseEntity<ProjectRequest> saveProject(@RequestBody ProjectRequest projectRequest) {
+        ProjectRequest savedProject = projectService.createProject(projectRequest);
         return ResponseEntity.ok(savedProject);
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<ProjectDto> updateProject(@PathVariable long id, @RequestBody ProjectDto projectRequest) {
-        ProjectDto updatedProject = projectService.updateProject(projectRequest, id);
-        return ResponseEntity.ok(updatedProject);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectRequest> updateProject(@PathVariable long id, @RequestBody ProjectRequest request) {
+        return ResponseEntity.ok(projectService.updateProject(request, id));
     }
-
-    @DeleteMapping(value =  "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProject(@PathVariable long id) {
         projectService.deleteProject(id);
-        return ResponseEntity.ok("Deleted project with id: " + id);
+        return ResponseEntity.ok("Deleted project with ID: " + id);
     }
 }

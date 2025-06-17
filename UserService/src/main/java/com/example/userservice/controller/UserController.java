@@ -1,7 +1,7 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.UserRequest;
-import com.example.userservice.dto.UserResponse;
+import com.example.userservice.dto.UserDto;
+import com.example.userservice.dto.UserIdsDto;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,28 +17,28 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponse> getUsers() {
+    public List<UserDto> getUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable long id) {
+    public UserIdsDto getUser(@PathVariable long id) {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
-        UserResponse response = userService.createUser(userRequest);
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userRequest) {
+        UserDto response = userService.createUser(userRequest);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable long id, @RequestBody UserResponse userRequest) {
-        UserResponse updatedUser = userService.updateUser(userRequest, id);
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody UserDto userRequest) {
+        UserDto updatedUser = userService.updateUser(userRequest, id);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
         return "Deleted user with id: " + id;

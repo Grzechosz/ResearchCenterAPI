@@ -14,8 +14,6 @@ public class AddressDto {
 
     private Long addressId;
 
-    private Set<UserDto> users;
-
     private String city;
 
     private String streetName;
@@ -26,4 +24,5 @@ public class AddressDto {
 
     private int flatNumber;
 
+    private Long userId;
 }

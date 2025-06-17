@@ -9,11 +9,12 @@ import java.util.Set;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
-    private long projectId;
+@AllArgsConstructor
+public class ProjectRequest {
+    private Long projectId;
     private String name;
     private String description;
-    private Set<AgreementDto> usersAgreements;
+    private Set<Long> agreementIds;
 }
+

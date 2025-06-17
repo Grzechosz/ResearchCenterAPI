@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgreementResponse {
-
-    private Long agreementId;
-
-    private Long userId;
-
+    private AgreementDto agreement;
     private ProjectDto project;
+    private UserDto user;
 }

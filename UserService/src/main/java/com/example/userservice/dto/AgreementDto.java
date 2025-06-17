@@ -11,5 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AgreementDto {
     private Long agreementId;
+    private Long userId;
+    private Long projectId;
     private ProjectDto project;
 }

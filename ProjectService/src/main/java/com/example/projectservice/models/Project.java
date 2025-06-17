@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,4 +27,8 @@ public class Project {
     @Column(length = 250)
     private String description;
 
+    @ElementCollection
+    @CollectionTable(name = "project_agreement_ids", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "agreement_id")
+    private Set<Long> agreementIds;
 }

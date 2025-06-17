@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,5 +40,5 @@ public class User {
     @ElementCollection
     @CollectionTable(name = "user_agreement_ids", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "agreement_id")
-    private Set<Long> agreementIds;
+    private List<Long> agreementIds;
 }

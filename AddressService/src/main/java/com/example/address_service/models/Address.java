@@ -31,5 +31,8 @@ public class Address {
 
     @Column(length = 4)
     private int flatNumber;
+
+    @Column(name = "user_id")
     private Long userId;
+
 }
