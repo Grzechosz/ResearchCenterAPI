@@ -28,8 +28,8 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
-        UserResponse userResponse = userService.createUser(userRequest);
-        return ResponseEntity.ok(userResponse);
+        UserResponse response = userService.createUser(userRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/update/{id}")

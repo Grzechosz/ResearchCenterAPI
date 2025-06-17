@@ -11,14 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressDto {
     private Long addressId;
-
     private String city;
-
     private String streetName;
-
     private String houseNumber;
-
     private int postcode;
-
     private int flatNumber;
+    private Long userId;
 }

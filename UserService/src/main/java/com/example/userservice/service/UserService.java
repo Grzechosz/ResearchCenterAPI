@@ -33,6 +33,9 @@ public class UserService {
                 .phoneNumber(userRequest.getPhoneNumber())
                 .mail(userRequest.getMail())
                 .build();
+        if (userRequest.getAddress() != null) {
+            addressClient.addAddressByUser(userRequest.getAddress());
+        }
         UserResponse userResponse = mapToUserResponse(userRepo.save(user));
         log.info("User {} is saved", user.getUserId());
 

@@ -25,7 +25,5 @@ public class UserRequest{
 
     private String mail;
 
-    private Set<Long> projectsAgreementsId;
-
-    private Long addressId;
+    private AddressDto address;
 }
