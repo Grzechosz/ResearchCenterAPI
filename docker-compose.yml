@@ -1,0 +1,17 @@
+services:
+  address-app:
+    image: address-app:latest
+    ports:
+      - "9000:9000"
+  user-app:
+    image: user-app:latest
+    ports:
+      - "9003:9003"
+  project-app:
+    image: project-app:latest
+    ports:
+      - "9002:9002"
+  agreement-app:
+    image: agreement-app:latest
+    ports:
+      - "9001:9001"
