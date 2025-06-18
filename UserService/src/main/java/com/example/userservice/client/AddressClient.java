@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
         name = "address-service",
-        url = "http://localhost:9000",
+        url = "http://address-app:9000",
         configuration = FeignConfig.class
 )public interface AddressClient {
 

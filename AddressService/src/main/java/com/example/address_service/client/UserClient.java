@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @FeignClient(name = "user-service",
-        url = "http://localhost:9003",
+        url = "http://user-app:9003",
         configuration = FeignConfig.class)
 public interface UserClient {
 

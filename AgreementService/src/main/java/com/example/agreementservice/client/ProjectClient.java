@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @FeignClient(name = "project-service",
-        url = "http://localhost:9002",
+        url = "http://project-app:9002",
         configuration = FeignConfig.class)
 public interface ProjectClient {
 

@@ -1,8 +1,11 @@
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:17-alpine
+
+# Expose the port your app listens on
 EXPOSE 9002
-# Copy the JAR file to the container
-ADD target/ProjectService-0.0.1-SNAPSHOT.jar ProjectService-0.0.1-SNAPSHOT.jar
+
+# Copy the JAR file to the container and rename na "app.jar"
+COPY target/ProjectService-0.0.1-SNAPSHOT.jar app.jar
 
 # Run the application
-ENTRYPOINT [ "java","-jar","ProjectService-0.0.1-SNAPSHOT.jar" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
