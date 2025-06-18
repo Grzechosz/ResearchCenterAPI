@@ -28,6 +28,9 @@ public class User {
     @Column(length = 45)
     private String surname;
 
+    @Column(length = 45)
+    private String password;
+
     @Column(length = 9)
     private int phoneNumber;
 

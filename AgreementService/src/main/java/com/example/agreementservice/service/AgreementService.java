@@ -2,10 +2,7 @@ package com.example.agreementservice.service;
 
 import com.example.agreementservice.client.ProjectClient;
 import com.example.agreementservice.client.UserClient;
-import com.example.agreementservice.dto.AgreementDto;
-import com.example.agreementservice.dto.AgreementResponse;
-import com.example.agreementservice.dto.ProjectDto;
-import com.example.agreementservice.dto.UserDto;
+import com.example.agreementservice.dto.*;
 import com.example.agreementservice.exception.AgreementNotFoundException;
 import com.example.agreementservice.models.Agreement;
 import com.example.agreementservice.repo.AgreementRepo;
@@ -64,15 +61,30 @@ public class AgreementService {
     }
 
     @Transactional(readOnly = true)
-    public List<AgreementDto> getAgreementsByUserId(Long userId) {
+    public List<AgreementDtoUser> getAgreementsByUserId(Long userId) {
         List<Agreement> agreements = agreementRepo.findAllByUserId(userId);
-        List<AgreementDto> responses = new ArrayList<>();
+        List<AgreementDtoUser> responses = new ArrayList<>();
 
         for (Agreement agreement : agreements) {
-            responses.add(mapToDto(agreement));
+            ProjectDto project = null;
+            try {
+                project = projectClient.getProjectsById(agreement.getProjectId());
+            } catch (Exception e) {
+                log.warn("Could not fetch project for agreement {}: {}", agreement.getAgreementId(), e.getMessage());
+            }
+
+            AgreementDtoUser dto = AgreementDtoUser.builder()
+                    .agreementId(agreement.getAgreementId())
+                    .userId(agreement.getUserId())
+                    .projectId(agreement.getProjectId())
+                    .project(project)
+                    .build();
+
+            responses.add(dto);
         }
         return responses;
     }
+
 
     public void deleteAgreement(Long id) {
         Agreement agreement = agreementRepo.findById(id)

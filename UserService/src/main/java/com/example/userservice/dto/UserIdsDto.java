@@ -15,6 +15,7 @@ public class UserIdsDto {
         private long userId;
         private String name;
         private String surname;
+        private String password;
         private int phoneNumber;
         private String mail;
         private AddressDto address;

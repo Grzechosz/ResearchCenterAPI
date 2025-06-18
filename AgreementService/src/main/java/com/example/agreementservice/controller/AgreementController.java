@@ -2,10 +2,7 @@ package com.example.agreementservice.controller;
 
 import com.example.agreementservice.client.ProjectClient;
 import com.example.agreementservice.client.UserClient;
-import com.example.agreementservice.dto.AgreementDto;
-import com.example.agreementservice.dto.AgreementResponse;
-import com.example.agreementservice.dto.ProjectDto;
-import com.example.agreementservice.dto.UserDto;
+import com.example.agreementservice.dto.*;
 import com.example.agreementservice.service.AgreementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +48,7 @@ public class AgreementController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<AgreementDto>> getByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<AgreementDtoUser>> getByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(agreementService.getAgreementsByUserId(userId));
     }
 

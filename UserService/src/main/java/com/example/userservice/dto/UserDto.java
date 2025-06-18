@@ -14,6 +14,7 @@ import java.util.List;
 public class UserDto {
     private long userId;
     private String name;
+    private String password;
     private String surname;
     private int phoneNumber;
     private String mail;

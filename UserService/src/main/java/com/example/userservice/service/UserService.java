@@ -26,12 +26,12 @@ public class UserService {
     private final AgreementClient agreementClient;
 
     public UserDto createUser(UserDto userRequest) {
-        // 1. Tworzenie i zapis użytkownika (bez addressId)
         User user = User.builder()
                 .name(userRequest.getName())
                 .surname(userRequest.getSurname())
                 .phoneNumber(userRequest.getPhoneNumber())
                 .mail(userRequest.getMail())
+                .password(userRequest.getPassword())
                 .build();
         user = userRepo.save(user);
 
@@ -61,7 +61,6 @@ public class UserService {
 
     public List<UserDto> getAllUsers() {
         List<User> users = userRepo.findAll();
-
         return users.stream().map(this::mapToUserResponse).toList();
     }
 
@@ -96,15 +95,11 @@ public class UserService {
 
     private UserIdsDto mapToUserResponseIds(User user) {
         AddressDto address = null;
-        List<AgreementDto> agreements = new ArrayList<>();
-
         try {
             address = addressClient.getAddressByUserId(user.getUserId());
         } catch (Exception e) {
             log.warn("Could not fetch address for user {}: {}", user.getUserId(), e.getMessage());
         }
-
-
         return UserIdsDto.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
@@ -112,6 +107,7 @@ public class UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .mail(user.getMail())
                 .address(address)
+                .password(user.getPassword())
                 .build();
     }
 
@@ -138,6 +134,7 @@ public class UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .mail(user.getMail())
                 .address(address)
+                .password(user.getPassword())
                 .projectsAgreements(agreements)
                 .build();
     }
