@@ -1,5 +1,7 @@
 package com.example.address_service.service;
 
+import com.example.address_service.annotations.PublicLogger;
+import com.example.address_service.annotations.ValidateAddress;
 import com.example.address_service.dto.AddressDto;
 import com.example.address_service.exception.AddressNotFoundException;
 import com.example.address_service.models.Address;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@PublicLogger
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class AddressService {
 
     private final AddressRepo addressRepo;
 
+    @ValidateAddress
     public AddressDto createAddress(AddressDto addressRequest){
         final Address address = Address.builder()
                 .userId(addressRequest.getUserId())
@@ -47,6 +51,7 @@ public class AddressService {
                 .orElseThrow(() -> new AddressNotFoundException("Address with ID " + id + " not found."));
     }
 
+    @ValidateAddress
     public AddressDto updateAddress(AddressDto addressRequest, long id) {
         return addressRepo.findById(id)
                 .map(existingAddress -> {
