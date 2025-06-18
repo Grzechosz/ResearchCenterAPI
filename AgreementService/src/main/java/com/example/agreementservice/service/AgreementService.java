@@ -94,7 +94,6 @@ public class AgreementService {
                 .agreementId(agreement.getAgreementId())
                 .userId(agreement.getUserId())
                 .projectId(agreement.getProjectId())
-                .project(project)
                 .build();
     }
 

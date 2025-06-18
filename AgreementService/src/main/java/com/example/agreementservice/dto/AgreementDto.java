@@ -16,6 +16,4 @@ public class AgreementDto {
     private Long userId;
 
     private Long projectId;
-
-    private ProjectDto project;
 }
